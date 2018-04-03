@@ -89,6 +89,9 @@
 }
 
 @media screen and (min-width: 1400px) {
+    body {
+        background: url(/img/bg.jpg) center / cover no-repeat;
+    }
     body.restaurant main {
         flex-flow: row nowrap;
     }

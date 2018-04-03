@@ -1,0 +1,23 @@
+{
+    "name": "mws-stage-1",
+    "version": "1.0.0",
+    "description": "---\r #### _Three Stage Course Material Project - Restaurant Reviews_",
+    "main": "index.js",
+    "scripts": {
+        "serve": "live-server --host=localhost --port=8000 --browser=chrome --quiet --wait=500"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/udacity/mws-restaurant-stage-1.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/udacity/mws-restaurant-stage-1/issues"
+    },
+    "homepage": "https://github.com/udacity/mws-restaurant-stage-1#readme",
+    "devDependencies": {
+        "live-server": "^1.2.0"
+    }
+}

@@ -1,3 +1,9 @@
+
+# mws-restaurant-stage-1
+Repository for my restaurant project of Udacity's MWS nanodegree
+
+=====================
+
 # Mobile Web Specialist Certification Course
 ---
 #### _Three Stage Course Material Project - Restaurant Reviews_
@@ -23,6 +29,3 @@ In a terminal, check the version of Python you have: `python -V`. If you have Py
 ### Note about ES6
 
 Most of the code in this project has been written to the ES6 JavaScript specification for compatibility with modern web browsers and future proofing JavaScript code. As much as possible, try to maintain use of ES6 in any additional JavaScript you write. 
-
-
-

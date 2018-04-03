@@ -33,13 +33,37 @@ self.addEventListener('install', (e) => {
 });
 
 self.addEventListener('fetch', (e) => {
+
+    // neccessary for sw to handle requests with query strings ( /restaurant.html?id=1 )
     const request = e.request.url.includes('/restaurant.html') ?
         new Request('/restaurant.html') :
         e.request;
 
     e.respondWith(
         caches.match(request).then((response) => {
-            return response || fetch(request);
+            if (response) {
+
+                // if online: fetch ressource and update cache asynchronously
+                if (navigator.onLine) {
+                    fetch(request).then((netresponse) => {
+                        caches.open(cachename).then((cache) => cache.put(request, netresponse))
+                    }).catch((e) => { /* catch DevTools related only-if-cached error */ });
+                }
+
+                // immediately return cached response: offline-first 🤘
+                return response;
+
+            } else {
+
+                // fetch previously uncached ressource, cache cloned response, return real response
+                return fetch(request).then((response) => {
+                    const cacheResponse = response.clone();
+                    caches.open(cachename).then((cache) => cache.put(request, cacheResponse));
+
+                    return response;
+                });
+
+            }
         })
     )
 });

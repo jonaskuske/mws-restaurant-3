@@ -39,6 +39,7 @@ fetchRestaurantFromURL = (callback) => {
                 console.error(error);
                 return;
             }
+            document.querySelector('title').textContent = `${restaurant.name} | NYC Restaurant Info`;
             fillRestaurantHTML();
             callback(null, restaurant)
         });

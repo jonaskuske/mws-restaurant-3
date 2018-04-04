@@ -173,6 +173,11 @@ body.restaurant main #map-container {
     width: 40%;
 }
 
+.filter-options select:focus {
+  color: #cc1212;
+  box-shadow: 0 0 6px 2px #ddd;
+}
+
 .filter-options select:first-of-type {
     margin-right: 1rem;
     ;
@@ -186,11 +191,10 @@ body.restaurant main #map-container {
     list-style: outside none none;
     height: 100%;
     margin: 0;
-    padding: 0;
+    padding: 0.5rem;
     display: grid;
     grid-template: auto / 1fr;
     grid-gap: 0.5rem;
-    padding: 0.5rem;
     box-sizing: border-box;
 }
 
@@ -266,7 +270,7 @@ body.restaurant main #map-container {
 
 #restaurant-address {
     font-size: 12pt;
-    margin: 10px 0px;
+    margin: 10px 0;
 }
 
 #restaurant-hours,
@@ -387,11 +391,11 @@ body.restaurant main #map-container {
 
 footer a {
     padding: 0 0.5rem;
-    color: #cc1212;
+color: #fff;
     text-decoration: none;
 }
 
 footer a:focus,
 footer a:hover {
-    text-shadow: 0 0 1px #fff;
+    text-shadow: 0 0 2px #fff;
 }

@@ -79,8 +79,11 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
     for (let key in operatingHours) {
         const row = document.createElement('tr');
 
-        const currentDay = new Date().toLocaleString('en-us', { weekday: 'long' });
-        if (key.toLowerCase().trim() == currentDay.toLowerCase()) row.classList.add('current-date');
+        const currentDay = new Date()
+            .toLocaleString('en-us', { weekday: 'long' })
+            .replace(/\u200e|&lrm;/, ''); // remove LMR marks, neccessary for Edge
+
+        if (key === currentDay) row.classList.add('current-date');
 
         const day = document.createElement('td');
         day.innerHTML = key;

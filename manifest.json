@@ -1,0 +1,38 @@
+{
+  "short_name": "NYC Reviews",
+  "name": "NYC Restaurant Reviews",
+  "description": "Read reviews for NYCs hottest restaurants.",
+  "start_url": "/",
+  "orientation": "portrait",
+  "display": "standalone",
+  "theme_color": "#282828",
+  "background_color": "#282828",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/img/icon_96.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "/img/icon_128.png",
+      "type": "image/png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "/img/icon_192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/img/icon_512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/img/icon_1028.png",
+      "type": "image/png",
+      "sizes": "1028x1028"
+    }
+  ]
+}

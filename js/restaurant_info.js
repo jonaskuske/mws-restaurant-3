@@ -92,6 +92,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
         const time = document.createElement('td');
         time.innerHTML = operatingHours[key];
         row.appendChild(time);
+        row.setAttribute('aria-label', `Open hours on ${restaurant.name}`);
 
         hours.appendChild(row);
     }

@@ -78,8 +78,16 @@ window.initMap = () => {
   self.map = new google.maps.Map(document.getElementById('map'), {
     zoom: 12,
     center: loc,
-    scrollwheel: false
+    scrollwheel: false,
+    keyboardShortcuts: false
   });
+  // exclude Google Map from tab navigation by setting all tabindices to -1
+  const disableTabForGoogleMap = () => {
+    const container = document.getElementById('map');
+    container.querySelectorAll('*').forEach(el => el.tabIndex = -1);
+  }
+  // timeout because markup of map is not complete immediately on tilesloaded
+  self.map.addListener('tilesloaded', () => setTimeout(disableTabForGoogleMap, 250));
   updateRestaurants();
 }
 

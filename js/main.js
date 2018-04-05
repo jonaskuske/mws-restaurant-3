@@ -81,6 +81,7 @@ window.initMap = () => {
         scrollwheel: false,
         keyboardShortcuts: false
     });
+    // inspired by https://stackoverflow.com/questions/30531075/remove-the-tabindex-the-google-maps-in-my-page/30532333
     // exclude Google Map from tab navigation by setting all tabindices to -1
     const disableTabForGoogleMap = () => {
             const container = document.getElementById('map');

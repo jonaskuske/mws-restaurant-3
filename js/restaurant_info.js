@@ -46,6 +46,30 @@ fetchRestaurantFromURL = (callback) => {
     }
 }
 
+const extractFirstNumber = str => str.match(/\d+/)[0];
+const constructImgURL = (suffix, url) => `/img/${extractFirstNumber(url)}${suffix ? '-'+suffix :''}.jpg`;
+const constructImgSrc = (size, url) => `${constructImgURL(size.name, url)} ${size.width}w`;
+const constructSrcSetString = (sizes, url) => sizes.map((size) => constructImgSrc(size, url)).join(', ');
+
+const createImageHTML = ({ src, sizes, HtmlSizes, alt = '', className = '' }) => {
+
+    const picture = document.createElement('picture');
+    picture.classList.add(className);
+
+    const source = document.createElement('source');
+    source.srcset = constructSrcSetString(sizes, src);
+    source.sizes = HtmlSizes;
+    picture.appendChild(source);
+
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = alt;
+    img.classList.add(className);
+    picture.appendChild(img);
+
+    return picture;
+};
+
 /**
  * Create restaurant HTML and add it to the webpage
  */
@@ -57,8 +81,15 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     address.innerHTML = restaurant.address;
 
     const image = document.getElementById('restaurant-img');
-    image.className = 'restaurant-img'
-    image.src = DBHelper.imageUrlForRestaurant(restaurant);
+
+    const picture = createImageHTML({
+        src: DBHelper.imageUrlForRestaurant(restaurant),
+        sizes: DBHelper.imageSizesForRestaurant(restaurant),
+        HtmlSizes: '100vw, (min-width: 750px) 50vw, (min-width: 140px) 30vw',
+        className: 'restaurant-img'
+    });
+
+    image.parentNode.replaceChild(picture, image);
 
     const cuisine = document.getElementById('restaurant-cuisine');
     cuisine.innerHTML = restaurant.cuisine_type;
@@ -92,7 +123,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
         const time = document.createElement('td');
         time.innerHTML = operatingHours[key];
         row.appendChild(time);
-        row.setAttribute('aria-label', `Open hours on ${restaurant.name}`);
+        row.setAttribute('aria-label', `Open hours on ${key}`);
 
         hours.appendChild(row);
     }

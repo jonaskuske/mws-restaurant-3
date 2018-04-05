@@ -151,6 +151,7 @@ createRestaurantHTML = (restaurant) => {
     const image = createImageHTML({
         src: imageSrc,
         sizes: imageSizes,
+        HtmlSizes: '90vw, (min-width: 600px) 45vw, (min-width: 900px) 27vw, (min-width: 1200px) 20vw',
         alt: `Picture of restaurant "${restaurant.name}"`,
         className: 'restaurant-img'
     });
@@ -182,14 +183,14 @@ const constructImgURL = (suffix, url) => `/img/${extractFirstNumber(url)}${suffi
 const constructImgSrc = (size, url) => `${constructImgURL(size.name, url)} ${size.width}w`;
 const constructSrcSetString = (sizes, url) => sizes.map((size) => constructImgSrc(size, url)).join(', ');
 
-const createImageHTML = ({ src, sizes, alt = '', className = '' }) => {
+const createImageHTML = ({ src, sizes, HtmlSizes, alt = '', className = '' }) => {
 
     const picture = document.createElement('picture');
     picture.classList.add(className);
 
     const source = document.createElement('source');
     source.srcset = constructSrcSetString(sizes, src);
-    source.sizes = '90vw, (min-width: 600px) 45vw, (min-width: 900px) 27vw, (min-width: 1200px) 20vw';
+    source.sizes = HtmlSizes;
     picture.appendChild(source);
 
     const img = document.createElement('img');

@@ -2,6 +2,12 @@
 # mws-restaurant-stage-1
 Repository for my restaurant project of Udacity's MWS nanodegree
 
+> The restaurant site now is responsive, utilizes a service worker for static and runtime caching and has improved accessibility.
+
+`npm i` to install live-server
+
+`npm run serve` to serve project on localhost:8000 and open in Chrome
+
 =====================
 
 # Mobile Web Specialist Certification Course

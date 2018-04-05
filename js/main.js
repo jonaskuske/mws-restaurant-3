@@ -84,10 +84,10 @@ window.initMap = () => {
     // inspired by https://stackoverflow.com/questions/30531075/remove-the-tabindex-the-google-maps-in-my-page/30532333
     // exclude Google Map from tab navigation by setting all tabindices to -1
     const disableTabForGoogleMap = () => {
-            const container = document.getElementById('map');
-            container.querySelectorAll('*').forEach(el => el.tabIndex = -1);
-        }
-        // timeout because markup of map is not complete immediately on tilesloaded
+        const container = document.getElementById('map');
+        container.querySelectorAll('*').forEach(el => el.tabIndex = -1);
+    }
+    // timeout because markup of map is not complete immediately on tilesloaded
     self.map.addListener('tilesloaded', () => setTimeout(disableTabForGoogleMap, 250));
     updateRestaurants();
 }
@@ -150,10 +150,10 @@ createRestaurantHTML = (restaurant) => {
     const imageSrc = DBHelper.imageUrlForRestaurant(restaurant);
     const imageSizes = DBHelper.imageSizesForRestaurant(restaurant);
     const image = createImageHTML({
+        alt: restaurant.imageAlt || '',
         src: imageSrc,
         sizes: imageSizes,
         HtmlSizes: '90vw, (min-width: 600px) 45vw, (min-width: 900px) 27vw, (min-width: 1200px) 20vw',
-        alt: `Picture of restaurant "${restaurant.name}"`,
         className: 'restaurant-img'
     });
     li.appendChild(image);
@@ -180,7 +180,7 @@ createRestaurantHTML = (restaurant) => {
 }
 
 const extractFirstNumber = str => str.match(/\d+/)[0];
-const constructImgURL = (suffix, url) => `/img/${extractFirstNumber(url)}${suffix ? '-'+suffix :''}.jpg`;
+const constructImgURL = (suffix, url) => `/img/${extractFirstNumber(url)}${suffix ? '-' + suffix : ''}.jpg`;
 const constructImgSrc = (size, url) => `${constructImgURL(size.name, url)} ${size.width}w`;
 const constructSrcSetString = (sizes, url) => sizes.map((size) => constructImgSrc(size, url)).join(', ');
 

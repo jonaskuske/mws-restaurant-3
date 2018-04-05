@@ -47,7 +47,7 @@ fetchRestaurantFromURL = (callback) => {
 }
 
 const extractFirstNumber = str => str.match(/\d+/)[0];
-const constructImgURL = (suffix, url) => `/img/${extractFirstNumber(url)}${suffix ? '-'+suffix :''}.jpg`;
+const constructImgURL = (suffix, url) => `/img/${extractFirstNumber(url)}${suffix ? '-' + suffix : ''}.jpg`;
 const constructImgSrc = (size, url) => `${constructImgURL(size.name, url)} ${size.width}w`;
 const constructSrcSetString = (sizes, url) => sizes.map((size) => constructImgSrc(size, url)).join(', ');
 
@@ -83,6 +83,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     const image = document.getElementById('restaurant-img');
 
     const picture = createImageHTML({
+        alt: restaurant.imageAlt || '',
         src: DBHelper.imageUrlForRestaurant(restaurant),
         sizes: DBHelper.imageSizesForRestaurant(restaurant),
         HtmlSizes: '100vw, (min-width: 750px) 50vw, (min-width: 140px) 30vw',

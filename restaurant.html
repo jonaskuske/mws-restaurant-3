@@ -1,78 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NYC Restaurant Info</title>
-    <meta name="theme-color" content="#282828">
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <!-- Normalize.css for better cross-browser consistency -->
-    <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
-    <!-- Main CSS file -->
-    <link rel="stylesheet" href="css/main.css" type="text/css">
-    <link rel="stylesheet" href="css/desktop.css" type="text/css">
-</head>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>NYC Restaurant Info</title>
+        <meta name="theme-color" content="#282828">
+        <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <!-- Normalize.css for better cross-browser consistency -->
+        <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
+        <!-- Main CSS file -->
+        <link rel="stylesheet" href="css/main.css" type="text/css">
+        <link rel="stylesheet" href="css/desktop.css" type="text/css">
+    </head>
 
-<body class="restaurant">
-    <!-- Beginning header -->
-    <header>
-        <!-- Beginning nav -->
-        <nav>
-            <h1><a href="/">Restaurant Reviews</a></h1>
-        </nav>
-        <!-- Beginning breadcrumb -->
-        <ul id="breadcrumb">
-            <li><a href="/">Home</a></li>
-        </ul>
-        <!-- End breadcrumb -->
-        <!-- End nav -->
-    </header>
-    <!-- End header -->
+    <body class="restaurant">
+        <!-- Beginning header -->
+        <header>
+            <!-- Beginning nav -->
+            <nav aria-label="Breadcrumb">
+                <h1><a href="/">Restaurant Reviews</a></h1>
+                <ul id="breadcrumb">
+                    <li><a href="/">Home</a></li>
+                </ul>
+            </nav>
+            <!-- End nav -->
+        </header>
+        <!-- End header -->
 
-    <!-- Beginning main -->
-    <main id="maincontent">
-        <!-- Beginning map -->
-        <section id="map-container">
-            <div id="map" aria-role="application" aria-label="Google Map showing restaurant location"></div>
-        </section>
-        <!-- End map -->
-        <!-- Beginning restaurant -->
-        <section id="restaurant-container">
-            <h1 id="restaurant-name"></h1>
-            <img id="restaurant-img" alt="">
-            <p id="restaurant-cuisine" aria-label="Cuisine of the restaurant"></p>
-            <p id="restaurant-address" aria-label="Address of the restaurant"></p>
-            <table id="restaurant-hours" aria-label="List of open hours per weekday"></table>
-        </section>
-        <!-- end restaurant -->
-        <!-- Beginning reviews -->
-        <section id="reviews-container">
-            <ul id="reviews-list" aria-label="List of reviews"></ul>
-        </section>
-        <!-- End reviews -->
-    </main>
-    <!-- End main -->
+        <!-- Beginning main -->
+        <main id="maincontent">
+            <!-- Beginning map -->
+            <section id="map-container">
+                <div id="map" aria-role="application" aria-label="Google Map showing restaurant location"></div>
+            </section>
+            <!-- End map -->
+            <!-- Beginning restaurant -->
+            <section id="restaurant-container">
+                <h2 id="restaurant-name"></h2>
+                <img id="restaurant-img" alt="">
+                <p id="restaurant-cuisine" aria-label="Cuisine of the restaurant"></p>
+                <p id="restaurant-address" aria-label="Address of the restaurant"></p>
+                <table id="restaurant-hours" aria-label="List of open hours per weekday"></table>
+            </section>
+            <!-- end restaurant -->
+            <!-- Beginning reviews -->
+            <section id="reviews-container">
+                <ul id="reviews-list" aria-label="List of reviews"></ul>
+            </section>
+            <!-- End reviews -->
+        </main>
+        <!-- End main -->
 
-    <!-- Beginning footer -->
-    <footer id="footer">
-        Copyright (c) 2017
-        <a href="/">
-            <strong>Restaurant Reviews</strong>
-        </a> All Rights Reserved.
-    </footer>
-    <!-- End footer -->
+        <!-- Beginning footer -->
+        <footer id="footer">
+            Copyright (c) 2017
+            <a href="/">
+                <strong>Restaurant Reviews</strong>
+            </a> All Rights Reserved.
+        </footer>
+        <!-- End footer -->
 
-    <!-- Beginning scripts -->
-    <!-- Database helpers -->
-    <script type="text/javascript" src="js/dbhelper.js"></script>
-    <!-- Main javascript file -->
-    <script type="text/javascript" src="js/restaurant_info.js"></script>
-    <!-- Google Maps -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDjyhk6b_ChJzBMlJV9nLEm-js94-W5Hv4&libraries=places&callback=initMap"></script>
-    <!-- End scripts -->
+        <!-- Beginning scripts -->
+        <!-- Database helpers -->
+        <script type="text/javascript" src="js/dbhelper.js"></script>
+        <!-- Main javascript file -->
+        <script type="text/javascript" src="js/restaurant_info.js"></script>
+        <!-- Google Maps -->
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDjyhk6b_ChJzBMlJV9nLEm-js94-W5Hv4&libraries=places&callback=initMap"></script>
+        <!-- End scripts -->
 
-</body>
+    </body>
 
 </html>

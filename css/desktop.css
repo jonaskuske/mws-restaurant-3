@@ -37,6 +37,9 @@
 }
 
 @media screen and (min-width: 1200px) {
+    body {
+        background: url(/img/bg.jpg) center / cover no-repeat;
+    }
     main {
         flex-wrap: nowrap;
         max-width: 1400px;
@@ -66,6 +69,7 @@
         order: -1;
         height: 60vh;
         overflow: auto;
+        overflow-x: hidden;
         float: left;
     }
     body.restaurant main #restaurant-container img {
@@ -89,9 +93,6 @@
 }
 
 @media screen and (min-width: 1400px) {
-    body {
-        background: url(/img/bg.jpg) center / cover no-repeat;
-    }
     body.restaurant main {
         flex-flow: row nowrap;
     }

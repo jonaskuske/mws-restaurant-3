@@ -36,6 +36,7 @@ main {
     grid-row: 2;
     display: flex;
     flex-flow: row wrap;
+    overflow-x: hidden;
 }
 
 footer {
@@ -144,7 +145,6 @@ body.restaurant main #map-container {
 
 #restaurant-container {
     background: #fff;
-    height: 100%;
     width: 100%;
 }
 

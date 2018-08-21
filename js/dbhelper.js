@@ -33,7 +33,7 @@ class DBHelper {
           .then(response => response.json())
           .then(restaurants => callback(null, restaurants))
           .catch(({ status }) => {
-            const error = (`Request failed. Returned status of ${status}`);
+            const error = (`Request failed. ${status ? `Returned status of ${status}` : 'Are you online?' }`);
             callback(error, null);
           })
     }
@@ -48,7 +48,9 @@ class DBHelper {
           .then(r => r.json())
           .then(restaurant => callback(null, restaurant))
           .catch(({ status }) => {
-              const error = `Restaurant not found, received status: ${status}`;
+              const error = status
+              ? `Restaurant not found, received status: ${status}`
+              : `Couldn't send the request for the restaurant. Are you online?`;
               callback(error, null);
           })
     }

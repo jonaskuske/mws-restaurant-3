@@ -1,6 +1,7 @@
 const { spawn } = require('child_process');
 
 // On Windows: use npm.cmd instead of npm command
+// see https://stackoverflow.com/questions/43230346/error-spawn-npm-enoent
 const npm = /^win/.test(process.platform) ? 'npm.cmd' : 'npm';
 
 // Start backend server

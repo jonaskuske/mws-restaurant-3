@@ -36,7 +36,6 @@ main {
     grid-row: 2;
     display: flex;
     flex-flow: row wrap;
-    overflow-x: hidden;
 }
 
 footer {

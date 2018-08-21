@@ -4,7 +4,10 @@
     "description": "---\r #### _Three Stage Course Material Project - Restaurant Reviews_",
     "main": "index.js",
     "scripts": {
-        "serve": "live-server --host=localhost --port=8000 --browser=chrome --quiet --wait=500"
+        "start": "node scripts/start.js",
+        "install:backend": "cd backend && npm i && cd ..",
+        "serve:backend": "node backend/app.js",
+        "serve:frontend": "live-server --host=localhost --port=8000 --browser=chrome --quiet --wait=500"
     },
     "repository": {
         "type": "git",

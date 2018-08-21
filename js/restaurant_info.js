@@ -14,6 +14,12 @@ window.initMap = () => {
                 center: restaurant.latlng,
                 scrollwheel: false
             });
+            self.map.addListener('tilesloaded', () => setTimeout(() => {
+                // hide Google Maps missing license popup
+                const style = document.createElement('style');
+                style.textContent = '#map>div:last-child{display:none;}';
+                document.head.appendChild(style);
+            }, 250))
             fillBreadcrumb();
             DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
         }

@@ -86,6 +86,11 @@ window.initMap = () => {
     const disableTabForGoogleMap = () => {
         const container = document.getElementById('map');
         container.querySelectorAll('*').forEach(el => el.tabIndex = -1);
+
+        // hide Google Maps missing license popup
+        const style = document.createElement('style');
+        style.textContent = '#map>div:last-child{display:none;}';
+        document.head.appendChild(style);
     }
     // timeout because markup of map is not complete immediately on tilesloaded
     self.map.addListener('tilesloaded', () => setTimeout(disableTabForGoogleMap, 250));

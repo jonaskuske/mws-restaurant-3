@@ -1,4 +1,16 @@
 /**
+ * Resolves if status is 200 OK, else rejects.
+ */
+const checkFetchStatus = response => {
+    const { status, statusText } = response
+
+    return new Promise((resolve, reject) => {
+        if (status === 200 && statusText === 'OK') resolve(response)
+        else reject(response)
+    })
+}
+
+/**
  * Common database helper functions.
  */
 class DBHelper {
@@ -16,18 +28,14 @@ class DBHelper {
      * Fetch all restaurants.
      */
     static fetchRestaurants(callback) {
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', DBHelper.DATABASE_URL);
-        xhr.onload = () => {
-            if (xhr.status === 200) { // Got a success response from server!
-                const restaurants = JSON.parse(xhr.responseText);
-                callback(null, restaurants);
-            } else { // Oops!. Got an error from server.
-                const error = (`Request failed. Returned status of ${xhr.status}`);
-                callback(error, null);
-            }
-        };
-        xhr.send();
+        fetch(DBHelper.DATABASE_URL)
+          .then(checkFetchStatus)
+          .then(response => response.json())
+          .then(restaurants => callback(null, restaurants))
+          .catch(({ status }) => {
+            const error = (`Request failed. Returned status of ${status}`);
+            callback(error, null);
+          })
     }
 
     /**
@@ -35,18 +43,14 @@ class DBHelper {
      */
     static fetchRestaurantById(id, callback) {
         // fetch all restaurants with proper error handling.
-        DBHelper.fetchRestaurants((error, restaurants) => {
-            if (error) {
-                callback(error, null);
-            } else {
-                const restaurant = restaurants.find(r => r.id == id);
-                if (restaurant) { // Got the restaurant
-                    callback(null, restaurant);
-                } else { // Restaurant does not exist in the database
-                    callback('Restaurant does not exist', null);
-                }
-            }
-        });
+        fetch(`${DBHelper.DATABASE_URL}/${id}`)
+          .then(checkFetchStatus)
+          .then(r => r.json())
+          .then(restaurant => callback(null, restaurant))
+          .catch(({ status }) => {
+              const error = `Restaurant not found, received status: ${status}`;
+              callback(error, null);
+          })
     }
 
     /**

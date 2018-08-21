@@ -1,13 +1,63 @@
+/* IndexedDB helpers */
+
+/**
+ * Promise resolving to the IndexedDB database
+ */
+const dbPromise = idb.open('restaurant-db', 1, function (upgradeDb) {
+    upgradeDb.createObjectStore('restaurants');
+});
+/**
+ * Opens database and retrieves element from store 'restaurants'
+ */
+const getFromRestaurantStore = key => {
+    return dbPromise.then(async db => {
+        const tx = db.transaction('restaurants');
+        const store = tx.objectStore('restaurants');
+        const body = await store.get(key);
+        await tx.complete;
+        return body;
+    });
+}
+/**
+ * Opens database and stores element in store 'restaurants'
+ */
+const putInRestaurantStore = (body, key) => {
+    return dbPromise.then(async db => {
+        const tx = db.transaction('restaurants', 'readwrite');
+        const store = tx.objectStore('restaurants');
+        await store.put(body, key);
+        await tx.complete;
+        return;
+    });
+}
+
+/* Fetch helpers */
+
 /**
  * Resolves if status is 200 OK, else rejects.
  */
 const checkFetchStatus = response => {
-    const { status, statusText } = response
+    const { status, statusText } = response;
 
     return new Promise((resolve, reject) => {
-        if (status === 200 && statusText === 'OK') resolve(response)
-        else reject(response)
+        if (status === 200 && statusText === 'OK') resolve(response);
+        else reject(response);
     })
+}
+/**
+ * fetch with added HTTP status check and json parsing
+ */
+const fetchJson = (...args) => {
+    const [url] = args;
+    return fetch(...args)
+        .then(checkFetchStatus)
+        .then(response => response.json())
+        .catch(e => {
+            const err = e.status
+                ? `Failed to fetch from ${url}, received status ${e.status}`
+                : `Error while performing fetch: ${e}`;
+            throw err;
+        })
 }
 
 /**
@@ -27,32 +77,54 @@ class DBHelper {
     /**
      * Fetch all restaurants.
      */
-    static fetchRestaurants(callback) {
-        fetch(DBHelper.DATABASE_URL)
-          .then(checkFetchStatus)
-          .then(response => response.json())
-          .then(restaurants => callback(null, restaurants))
-          .catch(({ status }) => {
-            const error = (`Request failed. ${status ? `Returned status of ${status}` : 'Are you online?' }`);
-            callback(error, null);
-          })
+    static async fetchRestaurants(callback) {
+        const storedRestaurants = await getFromRestaurantStore('all');
+        if (storedRestaurants) {
+            // call callback (offline first!), then try to update database
+            callback(null, storedRestaurants);
+            try {
+                const restaurants = await fetchJson(DBHelper.DATABASE_URL)
+                putInRestaurantStore(restaurants, 'all')
+            } catch (e) {
+                console.log(`Couldn't update cached data of restaurants.`)
+            }
+        } else {
+            // fetch data, call callback and update database
+            try {
+                const restaurants = await fetchJson(DBHelper.DATABASE_URL)
+                callback(null, restaurants);
+                putInRestaurantStore(restaurants, 'all')
+            } catch (e) {
+                callback(e, null);
+            }
+        }
     }
 
     /**
      * Fetch a restaurant by its ID.
      */
-    static fetchRestaurantById(id, callback) {
-        // fetch all restaurants with proper error handling.
-        fetch(`${DBHelper.DATABASE_URL}/${id}`)
-          .then(checkFetchStatus)
-          .then(r => r.json())
-          .then(restaurant => callback(null, restaurant))
-          .catch(({ status }) => {
-              const error = status
-              ? `Restaurant not found, received status: ${status}`
-              : `Couldn't send the request for the restaurant. Are you online?`;
-              callback(error, null);
-          })
+    static async fetchRestaurantById(id, callback) {
+        const restaurantURL = `${DBHelper.DATABASE_URL}/${id}`;
+        const storedRestaurant = await getFromRestaurantStore(id);
+        if (storedRestaurant) {
+            // call callback (offline first!), then try to update database
+            callback(null, storedRestaurant);
+            try {
+                const restaurant = await fetchJson(restaurantURL);
+                putInRestaurantStore(restaurant, id);
+            } catch (e) {
+                console.log(`Couldn't update cached restaurant data.`)
+            }
+        } else {
+            // fetch data, call callback and update database
+            try {
+                const restaurant = await fetchJson(restaurantURL)
+                callback(null, restaurant);
+                putInRestaurantStore(restaurant, id)
+            } catch (e) {
+                callback(e, null);
+            }
+        }
     }
 
     /**

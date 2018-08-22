@@ -12,29 +12,37 @@ const dbPromise = idb.open('restaurant-db', 2, function (upgradeDb) {
     }
 });
 /**
- * Opens database and retrieves element from store 'restaurants'
+ * Creates a function to get values from a specified idb objectStore
  */
-const getFromRestaurantStore = key => {
+const createStoreGetter = storeName => key => {
     return dbPromise.then(async db => {
-        const tx = db.transaction('restaurants');
-        const store = tx.objectStore('restaurants');
+        const tx = db.transaction(storeName);
+        const store = tx.objectStore(storeName);
         const body = await store.get(key);
         await tx.complete;
         return body;
     });
 }
 /**
- * Opens database and stores element in store 'restaurants'
+ * Creates a function to put values into a specified idb objectStore
  */
-const putInRestaurantStore = (body, key) => {
+const createStorePutter = storeName => (body, key) => {
     return dbPromise.then(async db => {
-        const tx = db.transaction('restaurants', 'readwrite');
-        const store = tx.objectStore('restaurants');
+        const tx = db.transaction(storeName, 'readwrite');
+        const store = tx.objectStore(storeName);
         await store.put(body, key);
         await tx.complete;
         return;
     });
 }
+
+/* Helper functions to access the restaurants store */
+const getFromRestaurantStore = createStoreGetter('restaurants');
+const putInRestaurantStore = createStorePutter('restaurants');
+/* Helper functions to access the reviews store */
+const getFromReviewsStore = createStoreGetter('reviews');
+const putInReviewsStore = createStorePutter('reviews');
+
 
 /* Fetch helpers */
 
@@ -115,10 +123,27 @@ class DBHelper {
     /**
      * Fetch all reviews for a restaurant with a given ID
      */
-    static async fetchReviewsByRestaurantId(id, callback) {
-        const fetchURL = `${DBHelper.URL.REVIEWS}?restaurant_id=${id}`;
-        const reviews = await fetchJson(fetchURL);
-        callback(null, reviews);
+    static async fetchReviewsByRestaurantId(restaurantId, callback) {
+        const reviewsURL = `${DBHelper.URL.REVIEWS}?restaurant_id=${restaurantId}`;
+        const storedReviews = await getFromReviewsStore(restaurantId);
+        if (storedReviews) {
+            // call callback (offline first!), then try to update database
+            callback(null, storedReviews);
+            try {
+                const reviews = await fetchJson(reviewsURL);
+                putInReviewsStore(reviews, restaurantId);
+            } catch(e) {
+                console.log(`Couldn't update cached reviews.`);
+            }
+        } else {
+            try {
+                const reviews = await fetchJson(reviewsURL);
+                callback(null, reviews);
+                putInReviewsStore(reviews, restaurantId);
+            } catch(e) {
+                callback(e, null);
+            }
+        }
     }
 
     /**

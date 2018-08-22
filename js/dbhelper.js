@@ -3,7 +3,7 @@
 /**
  * Promise resolving to the IndexedDB database
  */
-const dbPromise = idb.open('restaurant-db', 2, function (upgradeDb) {
+const dbPromise = idb.open('restaurant-db', 2, function(upgradeDb) {
     if (!upgradeDb.objectStoreNames.contains('restaurants')) {
         upgradeDb.createObjectStore('restaurants');
     }
@@ -15,6 +15,7 @@ const dbPromise = idb.open('restaurant-db', 2, function (upgradeDb) {
  * Creates a function to get values from a specified idb objectStore
  */
 const createStoreGetter = storeName => key => {
+    key = typeof key === 'string' ? key : key.toString();
     return dbPromise.then(async db => {
         const tx = db.transaction(storeName);
         const store = tx.objectStore(storeName);
@@ -27,6 +28,7 @@ const createStoreGetter = storeName => key => {
  * Creates a function to put values into a specified idb objectStore
  */
 const createStorePutter = storeName => (body, key) => {
+    key = typeof key === 'string' ? key : key.toString();
     return dbPromise.then(async db => {
         const tx = db.transaction(storeName, 'readwrite');
         const store = tx.objectStore(storeName);
@@ -132,7 +134,7 @@ class DBHelper {
             try {
                 const reviews = await fetchJson(reviewsURL);
                 putInReviewsStore(reviews, restaurantId);
-            } catch(e) {
+            } catch (e) {
                 console.log(`Couldn't update cached reviews.`);
             }
         } else {
@@ -140,7 +142,7 @@ class DBHelper {
                 const reviews = await fetchJson(reviewsURL);
                 callback(null, reviews);
                 putInReviewsStore(reviews, restaurantId);
-            } catch(e) {
+            } catch (e) {
                 callback(e, null);
             }
         }
@@ -150,9 +152,8 @@ class DBHelper {
         const setFavoriteURL = `${DBHelper.URL.RESTAURANTS}/${id}?is_favorite=${status}`;
         try {
             const result = await fetchJson(setFavoriteURL, { method: 'PUT' });
-            console.log(result.is_favorite);
             callback && callback(null, result);
-        } catch(e) {
+        } catch (e) {
             callback && callback(e, null);
         }
 

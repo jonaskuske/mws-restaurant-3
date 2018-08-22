@@ -69,9 +69,16 @@ class DBHelper {
      * Database URL.
      * Change this to restaurants.json file location on your server.
      */
-    static get DATABASE_URL() {
+    static get URL() {
         const port = 1337 // Change this to your server port
-        return `http://localhost:${port}/restaurants`;
+        return {
+            get RESTAURANTS() {
+                return `http://localhost:${port}/restaurants`;
+            },
+            get REVIEWS() {
+                return `http://localhost:${port}/reviews`;
+            }
+        }
     }
 
     /**
@@ -83,7 +90,7 @@ class DBHelper {
             // call callback (offline first!), then try to update database
             callback(null, storedRestaurants);
             try {
-                const restaurants = await fetchJson(DBHelper.DATABASE_URL)
+                const restaurants = await fetchJson(DBHelper.URL.RESTAURANTS)
                 putInRestaurantStore(restaurants, 'all')
             } catch (e) {
                 console.log(`Couldn't update cached data of restaurants.`)
@@ -91,7 +98,7 @@ class DBHelper {
         } else {
             // fetch data, call callback and update database
             try {
-                const restaurants = await fetchJson(DBHelper.DATABASE_URL)
+                const restaurants = await fetchJson(DBHelper.URL.RESTAURANTS)
                 callback(null, restaurants);
                 putInRestaurantStore(restaurants, 'all')
             } catch (e) {
@@ -101,10 +108,19 @@ class DBHelper {
     }
 
     /**
+     * Fetch all reviews for a restaurant with a given ID
+     */
+    static async fetchReviewsByRestaurantId(id, callback) {
+        const fetchURL = `${DBHelper.URL.REVIEWS}?restaurant_id=${id}`;
+        const reviews = await fetchJson(fetchURL);
+        callback(null, reviews);
+    }
+
+    /**
      * Fetch a restaurant by its ID.
      */
     static async fetchRestaurantById(id, callback) {
-        const restaurantURL = `${DBHelper.DATABASE_URL}/${id}`;
+        const restaurantURL = `${DBHelper.URL.RESTAURANTS}/${id}`;
         const storedRestaurant = await getFromRestaurantStore(id);
         if (storedRestaurant) {
             // call callback (offline first!), then try to update database

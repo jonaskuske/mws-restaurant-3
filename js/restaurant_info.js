@@ -45,9 +45,21 @@ fetchRestaurantFromURL = (callback) => {
                 console.error(error);
                 return;
             }
-            document.querySelector('title').textContent = `${restaurant.name} | NYC Restaurant Info`;
-            fillRestaurantHTML();
+            fillRestaurantHTML(restaurant);
             callback(null, restaurant)
+            document.title = `${restaurant.name} | NYC Restaurant Info`;
+
+            // restaurant fetched: fetch and load reviews
+            DBHelper.fetchReviewsByRestaurantId(id, (error, reviews) => {
+                if (!reviews) {
+                    console.error(error);
+                    // run function to create 'no reviews yet!' notice
+                    fillReviewsHTML(null);
+                    return;
+                }
+                self.reviews = reviews;
+                fillReviewsHTML(reviews);
+            })
         });
     }
 }
@@ -105,8 +117,6 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     if (restaurant.operating_hours) {
         fillRestaurantHoursHTML();
     }
-    // fill reviews
-    fillReviewsHTML();
 }
 
 /**
@@ -139,7 +149,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+fillReviewsHTML = (reviews = self.reviews) => {
     const container = document.getElementById('reviews-container');
     const title = document.createElement('h2');
     title.innerHTML = 'Reviews';
@@ -172,7 +182,9 @@ createReviewHTML = (review) => {
     header.appendChild(name);
 
     const date = document.createElement('p');
-    date.innerHTML = review.date;
+    const lastUpdate = review.updatedAt;
+    const dateObj = new Date(lastUpdate)
+    date.innerHTML = dateObj.toLocaleDateString();
     header.appendChild(date);
     li.appendChild(header);
 

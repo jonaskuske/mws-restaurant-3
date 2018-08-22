@@ -152,10 +152,12 @@ class DBHelper {
         const setFavoriteURL = `${DBHelper.URL.RESTAURANTS}/${id}?is_favorite=${status}`;
         try {
             const result = await fetchJson(setFavoriteURL, { method: 'PUT' });
+            // update cache with new favorite state
+            await putInRestaurantStore(result, id);
             callback && callback(null, result);
         } catch (e) {
             callback && callback(e, null);
-        }
+            }
 
     }
 

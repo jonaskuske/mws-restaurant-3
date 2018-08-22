@@ -3,8 +3,13 @@
 /**
  * Promise resolving to the IndexedDB database
  */
-const dbPromise = idb.open('restaurant-db', 1, function (upgradeDb) {
-    upgradeDb.createObjectStore('restaurants');
+const dbPromise = idb.open('restaurant-db', 2, function (upgradeDb) {
+    if (!upgradeDb.objectStoreNames.contains('restaurants')) {
+        upgradeDb.createObjectStore('restaurants');
+    }
+    if ((!upgradeDb.objectStoreNames.contains('reviews'))) {
+        upgradeDb.createObjectStore('reviews');
+    }
 });
 /**
  * Opens database and retrieves element from store 'restaurants'

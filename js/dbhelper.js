@@ -146,6 +146,18 @@ class DBHelper {
         }
     }
 
+    static async setRestaurantFavoriteStatus(id, status, callback) {
+        const setFavoriteURL = `${DBHelper.URL.RESTAURANTS}/${id}?is_favorite=${status}`;
+        try {
+            const result = await fetchJson(setFavoriteURL, { method: 'PUT' });
+            console.log(result.is_favorite);
+            callback && callback(null, result);
+        } catch(e) {
+            callback && callback(e, null);
+        }
+
+    }
+
     /**
      * Fetch a restaurant by its ID.
      */

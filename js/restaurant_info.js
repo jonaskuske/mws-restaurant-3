@@ -92,8 +92,32 @@ const createImageHTML = ({ src, sizes, HtmlSizes, alt = '', className = '' }) =>
  * Create restaurant HTML and add it to the webpage
  */
 fillRestaurantHTML = (restaurant = self.restaurant) => {
+    const id = restaurant.id;
+
     const name = document.getElementById('restaurant-name');
     name.innerHTML = restaurant.name;
+
+    let favoriteStatus = restaurant.is_favorite === 'true';
+
+    // TODO: add proper UI/UX
+    const markFavoriteStatus = status => {
+        if (status) name.innerHTML = restaurant.name + ' (favorite)';
+        else name.innerHTML = restaurant.name + ' (not favorite)';
+    }
+    markFavoriteStatus(favoriteStatus);
+
+    const handleChange = (err, res) => {
+        if (err) return console.error(err);
+
+        favoriteStatus = !favoriteStatus;
+        markFavoriteStatus(favoriteStatus);
+    }
+
+    function toggleFavoriteState() {
+        DBHelper.setRestaurantFavoriteStatus(id, !favoriteStatus, handleChange);
+    }
+
+    name.addEventListener('click', toggleFavoriteState)
 
     const address = document.getElementById('restaurant-address');
     address.innerHTML = restaurant.address;

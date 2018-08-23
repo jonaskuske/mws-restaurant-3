@@ -3,7 +3,7 @@
 /**
  * Promise resolving to the IndexedDB database
  */
-const dbPromise = idb.open('restaurant-db', 2, function(upgradeDb) {
+const dbPromise = idb.open('restaurant-db', 2, function (upgradeDb) {
     if (!upgradeDb.objectStoreNames.contains('restaurants')) {
         upgradeDb.createObjectStore('restaurants');
     }
@@ -55,7 +55,7 @@ const checkFetchStatus = response => {
     const { status, statusText } = response;
 
     return new Promise((resolve, reject) => {
-        if (status === 200 && statusText === 'OK') resolve(response);
+        if (status >= 200 && status < 300) resolve(response);
         else reject(response);
     })
 }
@@ -148,6 +148,22 @@ class DBHelper {
         }
     }
 
+    static async addReview(data, callback) {
+        const fetchOptions = {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: { 'Content-Type': 'application/json' }
+        }
+        try {
+            const res = await fetchJson(DBHelper.URL.REVIEWS, fetchOptions);
+            DBHelper.fetchReviewsByRestaurantId(data.restaurant_id, () => {
+                callback(null, res);
+            })
+        } catch (e) {
+            callback(e, null);
+        }
+    }
+
     static async setRestaurantFavoriteStatus(id, status, callback) {
         const setFavoriteURL = `${DBHelper.URL.RESTAURANTS}/${id}?is_favorite=${status}`;
         try {
@@ -157,7 +173,7 @@ class DBHelper {
             callback && callback(null, result);
         } catch (e) {
             callback && callback(e, null);
-            }
+        }
 
     }
 

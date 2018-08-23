@@ -21,9 +21,9 @@
           "Sunday": "12:00 pm - 4:00 pm, 5:30 pm - 11:00 pm"
         },
         "createdAt": 1504095563444,
-        "updatedAt": "2017-09-14T14:01:27.653Z",
+        "updatedAt": "2018-08-23T04:21:17.944Z",
         "id": 1,
-        "is_favorite": false,
+        "is_favorite": "true",
         "photograph_sizes": {
           "xs": 200,
           "s": 390,
@@ -53,8 +53,8 @@
           "Sunday": "12:00 pm - 3:00 pm, 5:00 pm - 11:00 pm"
         },
         "createdAt": 1504095568414,
-        "updatedAt": "2018-08-21T22:45:41.649Z",
-        "is_favorite": "true",
+        "updatedAt": "2018-08-23T07:18:50.251Z",
+        "is_favorite": "false",
         "id": 2,
         "photograph_sizes": {
           "xs": 200,
@@ -116,8 +116,8 @@
           "Sunday": "Sat - 10:30 pm"
         },
         "createdAt": 1504095567091,
-        "updatedAt": 1504095567091,
-        "is_favorite": false,
+        "updatedAt": "2018-08-23T04:07:51.543Z",
+        "is_favorite": "true",
         "id": 4,
         "photograph_sizes": {
           "xs": 200,
@@ -619,6 +619,96 @@
         "createdAt": "2018-08-21T22:53:37.477Z",
         "updatedAt": "2018-08-21T22:53:37.477Z",
         "id": 34
+      },
+      {
+        "restaurant_id": "4",
+        "name": "",
+        "rating": "1",
+        "comments": "",
+        "createdAt": "2018-08-23T05:02:08.047Z",
+        "updatedAt": "2018-08-23T05:02:08.047Z",
+        "id": 35
+      },
+      {
+        "restaurant_id": "4",
+        "name": "jonas",
+        "rating": "3",
+        "comments": "super sach",
+        "createdAt": "2018-08-23T05:02:41.038Z",
+        "updatedAt": "2018-08-23T05:02:41.038Z",
+        "id": 36
+      },
+      {
+        "restaurant_id": "4",
+        "name": "jonas",
+        "rating": "4",
+        "comments": "klasseeeee",
+        "createdAt": "2018-08-23T05:03:55.098Z",
+        "updatedAt": "2018-08-23T05:03:55.098Z",
+        "id": 37
+      },
+      {
+        "restaurant_id": "4",
+        "name": "jonas",
+        "rating": "3",
+        "comments": "hallooo",
+        "createdAt": "2018-08-23T05:07:04.978Z",
+        "updatedAt": "2018-08-23T05:07:04.978Z",
+        "id": 38
+      },
+      {
+        "restaurant_id": "1",
+        "name": "jonas",
+        "rating": "3",
+        "comments": "suuuuper toll",
+        "createdAt": "2018-08-23T05:09:50.004Z",
+        "updatedAt": "2018-08-23T05:09:50.004Z",
+        "id": 39
+      },
+      {
+        "restaurant_id": "1",
+        "name": "Jonas",
+        "rating": "3",
+        "comments": "tesrttttt",
+        "createdAt": "2018-08-23T05:11:32.062Z",
+        "updatedAt": "2018-08-23T05:11:32.062Z",
+        "id": 40
+      },
+      {
+        "restaurant_id": "1",
+        "name": "Jonas K.",
+        "rating": "1",
+        "comments": "Blablabka",
+        "createdAt": "2018-08-23T06:57:32.144Z",
+        "updatedAt": "2018-08-23T06:57:32.144Z",
+        "id": 41
+      },
+      {
+        "restaurant_id": "2",
+        "name": "Jonas",
+        "rating": "3",
+        "comments": "test",
+        "createdAt": "2018-08-23T07:14:45.105Z",
+        "updatedAt": "2018-08-23T07:14:45.105Z",
+        "id": 42
+      },
+      {
+        "restaurant_id": "2",
+        "name": "jonas",
+        "rating": "3",
+        "comments": "hjhdk",
+        "createdAt": "2018-08-23T07:17:22.560Z",
+        "updatedAt": "2018-08-23T07:17:22.560Z",
+        "id": 43
+      },
+      {
+        "restaurant_id": "2",
+        "name": "lalsl",
+        "rating": "5",
+        "comments": "kndknkd",
+        "createdAt": "2018-08-23T07:18:12.945Z",
+        "updatedAt": "2018-08-23T07:18:12.945Z",
+        "id": 44
       }
     ]
   },
@@ -674,7 +764,7 @@
       "id": 10
     },
     "reviews": {
-      "id": 34
+      "id": 44
     }
   }
 }

@@ -94,7 +94,7 @@ self.addEventListener('fetch', (e) => {
                     }
 
                     return response;
-                });
+                }).catch(e => console.log('Fetch failure.'));
 
             }
         })

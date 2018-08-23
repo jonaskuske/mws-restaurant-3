@@ -97,7 +97,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     const name = document.getElementById('restaurant-name');
     name.innerHTML = restaurant.name;
 
-    let favoriteStatus = restaurant.is_favorite === 'true';
+    let favoriteStatus = restaurant.is_favorite || restaurant.is_favorite === 'true';
 
     // TODO: add proper UI/UX
     const markFavoriteStatus = status => {
@@ -174,10 +174,17 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  * Create all reviews HTML and add them to the webpage.
  */
 fillReviewsHTML = (reviews = self.reviews) => {
+    const restaurantId = self.restaurant.id;
+
     const container = document.getElementById('reviews-container');
     const title = document.createElement('h2');
     title.innerHTML = 'Reviews';
     container.appendChild(title);
+
+    const createReview = document.createElement('a');
+    createReview.href = `/newreview.html?restaurant_id=${restaurantId}`;
+    createReview.textContent = 'Review hinzufügen';
+    container.appendChild(createReview);
 
     if (!reviews) {
         const noReviews = document.createElement('p');

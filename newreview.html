@@ -33,10 +33,6 @@
     <!-- Beginning main -->
     <main id="maincontent">
       <h2 id="restaurant-name">Add review</h2>
-      <div id="error" class="hide">
-        <h3>Error!</h3>
-        <p id="error-msg"></p>
-      </div>
       <form method="post" id="form" class="form hide">
         <label for="name">Enter your name:</label>
         <input type="text" name="name" id="name" required>
@@ -52,6 +48,10 @@
         <textarea name="comments" id="comments" cols="30" rows="10" required></textarea>
         <input type="submit" value="Send" aria-label="Send review">
       </form>
+      <div id="error" class="hide">
+        <h3>Error!</h3>
+        <p id="error-msg"></p>
+      </div>
       <div id="success" class="hide">
         <h3>Successfully added your review!</h3>
       </div>
@@ -68,6 +68,13 @@
     <!-- End footer -->
 
     <!-- Beginning scripts -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(reg => console.log('sw registered'))
+          .catch(err => console.warn(`sw failed to register: ${err}`));
+      }
+    </script>
     <!-- Database helpers -->
     <script type="application/javascript" charset="utf-8" src="js/idb.js"></script>
     <script type="text/javascript" src="js/dbhelper.js"></script>

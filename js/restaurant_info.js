@@ -5,26 +5,20 @@ var map;
  * Initialize Google map, called from HTML.
  */
 window.initMap = () => {
-    fetchRestaurantFromURL((error, restaurant) => {
-        if (error) { // Got an error!
-            console.error(error);
-        } else {
-            self.map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 16,
-                center: restaurant.latlng,
-                scrollwheel: false
-            });
-            self.map.addListener('tilesloaded', () => setTimeout(() => {
-                // hide Google Maps missing license popup
-                const style = document.createElement('style');
-                style.textContent = '#map>div:last-child{display:none;}';
-                document.head.appendChild(style);
-            }, 250))
-            fillBreadcrumb();
-            DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
-        }
+    self.map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 16,
+        center: restaurant.latlng,
+        scrollwheel: false
     });
+    self.map.addListener('tilesloaded', () => setTimeout(() => {
+        // hide Google Maps missing license popup
+        const style = document.createElement('style');
+        style.textContent = '#map>div:last-child{display:none;}';
+        document.head.appendChild(style);
+    }, 250))
+    DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
 }
+
 
 /**
  * Get current restaurant from page URL.
@@ -270,3 +264,14 @@ if ('serviceWorker' in navigator) {
         .then(reg => console.log('sw registered'))
         .catch(err => console.warn(`sw failed to register: ${err}`));
 }
+
+fetchRestaurantFromURL((error) => {
+    if (error) console.error(error);
+    else {
+        fillBreadcrumb();
+        // load Google Maps
+        const script = document.createElement('script');
+        script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDjyhk6b_ChJzBMlJV9nLEm-js94-W5Hv4&libraries=places&callback=initMap';
+        document.head.appendChild(script);
+    }
+})

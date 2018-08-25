@@ -34,8 +34,6 @@ header {
 
 main {
     grid-row: 2;
-    display: flex;
-    flex-flow: row wrap;
 }
 
 footer {

@@ -41,7 +41,7 @@
         background: url(/img/bg.jpg) center / cover no-repeat;
     }
     main {
-        flex-wrap: nowrap;
+        display: flex;
         max-width: 1400px;
         margin: auto;
     }

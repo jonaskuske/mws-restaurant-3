@@ -269,6 +269,7 @@ body.restaurant main #map-container {
     font-weight: 200;
     text-transform: uppercase;
     line-height: 1.1;
+    background: #282828;
 }
 .btn-favorite {
     margin: 0;

@@ -38,7 +38,10 @@
             <!-- End map -->
             <!-- Beginning restaurant -->
             <section id="restaurant-container">
-                <h2 id="restaurant-name"></h2>
+                <header class="restaurant-name-header">
+                    <h2 id="restaurant-name"></h2>
+                    <button class="btn-favorite">★</button>
+                </header>
                 <img id="restaurant-img" alt="">
                 <p id="restaurant-cuisine" aria-label="Cuisine of the restaurant"></p>
                 <p id="restaurant-address" aria-label="Address of the restaurant"></p>
@@ -47,6 +50,12 @@
             <!-- end restaurant -->
             <!-- Beginning reviews -->
             <section id="reviews-container">
+                <h2>Reviews</h2>
+                <div class="add-review-container">
+                    <a href="/newreview.html" class="add-review">
+                        Add your own review
+                    </a>
+                </div>
                 <ul id="reviews-list" aria-label="List of reviews"></ul>
             </section>
             <!-- End reviews -->

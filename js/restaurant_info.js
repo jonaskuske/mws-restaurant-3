@@ -94,6 +94,7 @@ const createImageHTML = ({ src, sizes, HtmlSizes, alt = '', className = '' }) =>
 fillRestaurantHTML = (restaurant = self.restaurant) => {
     const id = restaurant.id;
 
+    const btnFavorite = document.querySelector('.btn-favorite');
     const name = document.getElementById('restaurant-name');
     name.innerHTML = restaurant.name;
 
@@ -101,8 +102,17 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
     // TODO: add proper UI/UX
     const markFavoriteStatus = status => {
-        if (status) name.innerHTML = restaurant.name + ' (favorite)';
-        else name.innerHTML = restaurant.name + ' (not favorite)';
+        if (status) {
+            name.innerHTML = restaurant.name + ' (favorite)';
+            btnFavorite.textContent = '★';
+            btnFavorite.classList.add('btn-favorite--is-fav');
+            btnFavorite.setAttribute('aria-label', 'Mark as favorite restaurant')
+        } else {
+            name.innerHTML = restaurant.name;
+            btnFavorite.textContent = '☆';
+            btnFavorite.classList.remove('btn-favorite--is-fav');
+            btnFavorite.setAttribute('aria-label', 'Unmark as favorite restaurant');
+        }
     }
     markFavoriteStatus(favoriteStatus);
 
@@ -117,7 +127,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
         DBHelper.setRestaurantFavoriteStatus(id, !favoriteStatus, handleChange);
     }
 
-    name.addEventListener('click', toggleFavoriteState)
+    btnFavorite.addEventListener('click', toggleFavoriteState)
 
     const address = document.getElementById('restaurant-address');
     address.innerHTML = restaurant.address;
@@ -177,16 +187,11 @@ fillReviewsHTML = (reviews = self.reviews) => {
     const restaurantId = self.restaurant.id;
 
     const container = document.getElementById('reviews-container');
-    const title = document.createElement('h2');
-    title.innerHTML = 'Reviews';
-    container.appendChild(title);
 
-    const createReview = document.createElement('a');
-    createReview.href = `/newreview.html?restaurant_id=${restaurantId}`;
-    createReview.textContent = 'Review hinzufügen';
-    container.appendChild(createReview);
+    const addReviewLink = document.querySelector('.add-review');
+    addReviewLink.href += `?restaurant_id=${restaurantId}`;
 
-    if (!reviews) {
+    if (!reviews || !reviews.length) {
         const noReviews = document.createElement('p');
         noReviews.innerHTML = 'No reviews yet!';
         container.appendChild(noReviews);

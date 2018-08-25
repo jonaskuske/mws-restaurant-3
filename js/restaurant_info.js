@@ -1,4 +1,4 @@
-let restaurant;
+let restaurantGlobal;
 var map;
 
 /**
@@ -7,7 +7,7 @@ var map;
 window.initMap = () => {
     self.map = new google.maps.Map(document.getElementById('map'), {
         zoom: 16,
-        center: restaurant.latlng,
+        center: restaurantGlobal.latlng,
         scrollwheel: false
     });
     self.map.addListener('tilesloaded', () => setTimeout(() => {
@@ -34,7 +34,7 @@ fetchRestaurantFromURL = (callback) => {
         callback(error, null);
     } else {
         DBHelper.fetchRestaurantById(id, (error, restaurant) => {
-            self.restaurant = restaurant;
+            self.restaurant = restaurantGlobal = restaurant;
             if (!restaurant) {
                 console.error(error);
                 return;

@@ -259,12 +259,6 @@ getParameterByName = (name, url) => {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js')
-        .then(reg => console.log('sw registered'))
-        .catch(err => console.warn(`sw failed to register: ${err}`));
-}
-
 fetchRestaurantFromURL((error) => {
     if (error) console.error(error);
     else {

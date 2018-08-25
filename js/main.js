@@ -143,7 +143,8 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
     restaurants.forEach(restaurant => {
         ul.appendChild(createRestaurantHTML(restaurant));
     });
-    addMarkersToMap();
+
+    if (self.map) addMarkersToMap();
 }
 
 /**
@@ -222,8 +223,4 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     });
 }
 
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js')
-        .then(reg => console.log('sw registered'))
-        .catch(err => console.warn(`sw failed to register: ${err}`));
-}
+updateRestaurants();

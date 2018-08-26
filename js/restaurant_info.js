@@ -92,7 +92,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     const name = document.getElementById('restaurant-name');
     name.innerHTML = restaurant.name;
 
-    let favoriteStatus = restaurant.is_favorite || restaurant.is_favorite === 'true';
+    let favoriteStatus = restaurant.is_favorite === true || restaurant.is_favorite === 'true';
 
     // TODO: add proper UI/UX
     const markFavoriteStatus = status => {

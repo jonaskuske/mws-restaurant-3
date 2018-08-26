@@ -3,7 +3,7 @@
 /**
  * Promise resolving to the IndexedDB database
  */
-const dbPromise = idb.open('restaurant-db', 2, function (upgradeDb) {
+const dbPromise = idb.open('restaurant-db', 3, function (upgradeDb) {
     if (!upgradeDb.objectStoreNames.contains('restaurants')) {
         upgradeDb.createObjectStore('restaurants');
     }
@@ -154,14 +154,32 @@ class DBHelper {
             body: JSON.stringify(data),
             headers: { 'Content-Type': 'application/json' }
         }
-        try {
-            const res = await fetchJson(DBHelper.URL.REVIEWS, fetchOptions);
-            DBHelper.fetchReviewsByRestaurantId(data.restaurant_id, () => {
-                callback(null, res);
-            })
-        } catch (e) {
-            callback(e, null);
+        const fallbackFn = async () => {
+            try {
+                const res = await fetchJson(DBHelper.URL.REVIEWS, fetchOptions);
+                DBHelper.fetchReviewsByRestaurantId(data.restaurant_id, () => {
+                    callback(null, res);
+                })
+            } catch (e) {
+                callback(e, null);
+            }
         }
+        if ('serviceWorker' in navigator && 'SyncManager' in window) {
+            navigator.serviceWorker.ready.then(async function (reg) {
+                const outbox = await getFromReviewsStore('outbox');
+
+                let updatedOutbox;
+                if (Array.isArray(outbox)) updatedOutbox = [...outbox, data];
+                else updatedOutbox = [data];
+
+                await putInReviewsStore(updatedOutbox, 'outbox');
+                await reg.sync.register('sync-outbox').then(() => console.log('registered sync'));
+                callback(null, { type: 'in_sync' });
+            }).catch(fallbackFn);
+        } else {
+            fallbackFn();
+        }
+
     }
 
     static async setRestaurantFavoriteStatus(id, status, callback) {

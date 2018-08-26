@@ -1,3 +1,5 @@
+importScripts('/js/idb.js');
+
 const cachename = 'restaurant-reviews-v1';
 const BACKEND_HOST = 'localhost:1337';
 
@@ -6,11 +8,15 @@ const assets = [
     '/',
     '/index.html',
     '/restaurant.html',
+    '/newreview.html',
     './css/main.css',
     './css/desktop.css',
+    './css/newreview.css',
     './js/main.js',
+    './js/idb.js',
     './js/dbhelper.js',
     './js/restaurant_info.js',
+    './js/newreview.js',
     './img/1.jpg',
     './img/2.jpg',
     './img/3.jpg',
@@ -57,9 +63,10 @@ self.addEventListener('fetch', (e) => {
 
     // neccessary for sw to handle requests with query strings
     // like /restaurant.html?id=1
-    const request = e.request.url.includes('/restaurant.html') ?
-        new Request('/restaurant.html') :
-        e.request;
+    let request;
+    if (e.request.url.includes('/restaurant.html')) request = new Request('/restaurant.html');
+    else if (e.request.url.includes('/newreview.html')) request = new Request('/newreview.html');
+    else request = e.request;
 
     e.respondWith(
         caches.match(request).then((response) => {
@@ -100,3 +107,68 @@ self.addEventListener('fetch', (e) => {
         })
     )
 });
+
+const dbPromise = idb.open('restaurant-db', 3)
+const getOutbox = () => dbPromise.then(async db => {
+    const tx = db.transaction('reviews');
+    const store = tx.objectStore('reviews');
+    const outbox = await store.get('outbox');
+    await tx.complete;
+    return outbox;
+})
+const putInReviewStore = (body, key) => dbPromise.then(async db => {
+    const tx = db.transaction('reviews', 'readwrite');
+    const store = tx.objectStore('reviews');
+    await store.put(body, key);
+    await tx.complete;
+    return;
+})
+checkFetchStatus = r => new Promise((res, rej) => {
+    if (r.status >= 200 && r.status < 300) res(r);
+    else rej(r);
+})
+const updateReviewCache = async id => {
+    const reviews = await fetch(
+        `http://localhost:1337/reviews?restaurant_id=${id}`
+    )
+        .then(checkFetchStatus)
+        .then(r => r.json());
+
+    await putInReviewStore(reviews, id);
+}
+const sendReview = data => {
+    return fetch('http://localhost:1337/reviews', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+    }).then(checkFetchStatus);
+}
+
+const clearOutbox = () => new Promise(async (resolve, reject) => {
+    const outbox = await getOutbox();
+
+    const affectedIds = outbox.map(({ restaurant_id: id }) => id);
+    try {
+        for (let i = 0; i < outbox.length; i++) {
+            const review = outbox.pop();
+            await sendReview(review);
+            await putInReviewStore(outbox, 'outbox');
+        }
+        resolve();
+    } catch (e) {
+        reject(e);
+    }
+
+    // Updated cached reviews for all entries that changed
+    Promise
+        .all(affectedIds.map(updateReviewCache))
+        .catch(() => console.log('Cache update after clearing outbox failed.'));
+
+})
+
+self.addEventListener('sync', evt => {
+    console.log(evt);
+    if (evt.tag === 'sync-outbox') {
+        return evt.waitUntil(clearOutbox());
+    }
+})

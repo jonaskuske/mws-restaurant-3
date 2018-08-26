@@ -52,13 +52,17 @@
         comments: commentsInput.value,
       };
 
-      DBHelper.addReview(formData, (error) => {
+      DBHelper.addReview(formData, (error, response) => {
         if (error) return console.log(error);
 
         const back = createBackButton(id);
         successDiv.append(back);
 
         form.classList.add('hide');
+
+        if (response.type && response.type === 'in_sync') {
+          successDiv.querySelector('h3').textContent = `Your review was submitted. In case you're offline, we'll upload it once you have an internet connection!`;
+        }
         successDiv.classList.remove('hide');
       })
     })

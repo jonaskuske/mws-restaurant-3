@@ -1,11 +1,12 @@
 
-# MWS project "restaurant" - Stage 2
+# MWS project "restaurant" - Stage 3
 Repository for my restaurant project of Udacity's MWS nanodegree.
 
 > Stage 1: The restaurant site now is responsive, utilizes a service worker for static and runtime caching and has improved accessibility.  
-> Stage 2: The project now receives data from a dynamic backend, which is stored/cached in IndexedDB.
+> Stage 2: The project now receives data from a dynamic backend, which is stored/cached in IndexedDB.  
+> Stage 3: The project allows adding new user reviews which are synced in the background, marking/unmarking restaurants as favorite and has performance improvements.
 
-The commits starting from [*#8ee05f1*](https://github.com/jonaskuske/mws-restaurant-2/commit/8ee05f183629c7349ae538a4a64537ebafbdc5bf) are the relevant ones for stage 2.
+The commits starting from [*#473a4b9*](https://github.com/jonaskuske/mws-restaurant-3/commit/473a4b9b98e1d8644a37062173f29680763c8503) are the relevant ones for stage 3.
 
 ## Instructions
 

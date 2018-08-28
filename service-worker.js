@@ -34,7 +34,8 @@ const isResponseCacheable = response => {
     return true
 }
 
-/* get the filenames to cache from the parcel-manifest and add them to cache */
+/* get the filenames to cache from the parcel-manifest and add them to cache
+see https://michalzalecki.com/progressive-web-apps-with-webpack/ */
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)

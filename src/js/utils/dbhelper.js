@@ -155,6 +155,7 @@ export class DBHelper {
             body: JSON.stringify(data),
             headers: { 'Content-Type': 'application/json' }
         }
+        // function to call if background sync is unavailable - traditional POST
         const fallbackFn = async () => {
             try {
                 const res = await fetchJson(DBHelper.URL.REVIEWS, fetchOptions);
@@ -165,6 +166,7 @@ export class DBHelper {
                 callback(e, null);
             }
         }
+        // backgroundsync available? store review in idb 'outbox' & request sync
         if ('serviceWorker' in navigator && 'SyncManager' in window) {
             navigator.serviceWorker.ready.then(async function (reg) {
                 const outbox = await getFromReviewsStore('outbox');
@@ -174,7 +176,8 @@ export class DBHelper {
                 else updatedOutbox = [data];
 
                 await putInReviewsStore(updatedOutbox, 'outbox');
-                await reg.sync.register('sync-outbox').then(() => console.log('registered sync'));
+                await reg.sync.register('sync-outbox').then(() => console.log('Requested syncing of outbox.'));
+                // let callee know that review will be synced in the background
                 callback(null, { type: 'in_sync' });
             }).catch(fallbackFn);
         } else {

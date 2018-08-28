@@ -10,6 +10,7 @@ import { DBHelper } from './utils/dbhelper';
   const errorDiv = document.getElementById('error');
   const errorMsg = document.getElementById('error-msg');
 
+  // returns an object containing the URL parameters
   const getQueryParams = url => {
     const queryString = url.split('?')[1];
     if (!queryString) return {};
@@ -23,6 +24,7 @@ import { DBHelper } from './utils/dbhelper';
     return paramObject;
   };
 
+  // creates a back button that links to the restaurant with a given id
   const createBackButton = id => {
     const btn = document.createElement('a');
     btn.href = `/restaurant.html?id=${id}`;
@@ -45,6 +47,7 @@ import { DBHelper } from './utils/dbhelper';
 
     form.classList.remove('hide');
 
+    // on submit: put data into object, send to server, handle response
     form.addEventListener('submit', e => {
       e.preventDefault();
 

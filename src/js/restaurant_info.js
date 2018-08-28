@@ -95,9 +95,10 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
     const name = document.getElementById('restaurant-name');
     name.innerHTML = restaurant.name;
 
+    // handle is_favorite being returned from the server with different types
     let favoriteStatus = restaurant.is_favorite === true || restaurant.is_favorite === 'true';
 
-    // TODO: add proper UI/UX
+    // updates HTML depending on whether restaurant currently is favorite or not
     const markFavoriteStatus = status => {
         if (status) {
             name.innerHTML = restaurant.name + ' (favorite)';
@@ -111,8 +112,10 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
             btnFavorite.setAttribute('aria-label', 'Unmark as favorite restaurant');
         }
     }
+    // update the HTML
     markFavoriteStatus(favoriteStatus);
 
+    // status changed server-side? toggle status, then update HTML accordingly
     const handleChange = (err, res) => {
         if (err) return console.error(err);
 
@@ -124,6 +127,7 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
         DBHelper.setRestaurantFavoriteStatus(id, !favoriteStatus, handleChange);
     }
 
+    // toggle state on click on the star-button
     btnFavorite.addEventListener('click', toggleFavoriteState)
 
     const address = document.getElementById('restaurant-address');

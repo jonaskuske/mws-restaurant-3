@@ -34,6 +34,7 @@ const isResponseCacheable = response => {
     return true
 }
 
+/* get the filenames to cache from the parcel-manifest and add them to cache */
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
@@ -42,6 +43,7 @@ self.addEventListener('install', event => {
                     .then(response => response.json())
                     .then(assets => {
                         const hashedAssets = Object.entries(assets)
+                            // filter out files that are unnecessary to cache
                             .filter(([sourceURL]) => (
                                 !sourceURL.includes('webmanifest') &&
                                 !sourceURL.includes('favicon') &&
@@ -55,6 +57,7 @@ self.addEventListener('install', event => {
     );
 });
 
+/* delete old caches on activation */
 self.addEventListener('activate', event => {
     const allowedCaches = [CACHE_NAME];
     event.waitUntil(
@@ -144,6 +147,7 @@ const checkFetchStatus = r => new Promise((res, rej) => {
     if (r.status >= 200 && r.status < 300) res(r);
     else rej(r);
 })
+/* update the cached reviews for a given restaurant */
 const updateReviewCache = async id => {
     const reviews = await fetch(
         `http://localhost:1337/reviews?restaurant_id=${id}`
@@ -153,6 +157,7 @@ const updateReviewCache = async id => {
 
     await putInReviewStore(reviews, id);
 }
+/* send a review to the server */
 const sendReview = data => {
     return fetch('http://localhost:1337/reviews', {
         method: 'POST',
@@ -161,14 +166,19 @@ const sendReview = data => {
     }).then(checkFetchStatus);
 }
 
+/* Sends all reviews stored in the outbox to the server */
 const clearOutbox = () => new Promise(async (resolve, reject) => {
     const outbox = await getOutbox();
 
     const affectedIds = outbox.map(({ restaurant_id: id }) => id);
     try {
         for (let i = 0; i < outbox.length; i++) {
+            // get a review
             const review = outbox.pop();
+            // send it
             await sendReview(review);
+            // then remove it from the outbox by overwriting it with the
+            // new, updated outbox
             await putInReviewStore(outbox, 'outbox');
         }
         resolve();
@@ -176,15 +186,17 @@ const clearOutbox = () => new Promise(async (resolve, reject) => {
         reject(e);
     }
 
-    // Updated cached reviews for all entries that changed
+    // Update cached reviews for all entries that changed
     Promise
         .all(affectedIds.map(updateReviewCache))
         .catch(() => console.log('Cache update after clearing outbox failed.'));
 
 })
 
+/* register the handler for syncing the outbox */
 self.addEventListener('sync', evt => {
-    console.log(evt);
+    console.log('syncing outbox...');
+
     if (evt.tag === 'sync-outbox') {
         return evt.waitUntil(clearOutbox());
     }

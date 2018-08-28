@@ -2,12 +2,18 @@
     "name": "mws-stage-1",
     "version": "1.0.0",
     "description": "---\r #### _Three Stage Course Material Project - Restaurant Reviews_",
-    "main": "index.js",
+    "main": "index.html",
+    "browserslist": [
+        "chrome > 65"
+    ],
     "scripts": {
         "start": "node scripts/start.js",
         "install:backend": "cd backend && npm i && cd ..",
         "serve:backend": "node backend/app.js",
-        "serve:frontend": "live-server --host=localhost --port=8000 --browser=chrome --quiet --wait=500"
+        "serve:frontend": "live-server --host=localhost --port=8000 --browser=chrome --quiet --wait=500",
+        "build": "npm run copy:img && parcel build index.html",
+        "copy:img": "mkdir -p ./dist/img && cp -rf ./src/img/* ./dist/img/",
+        "dev": "npm run copy:img && parcel index.html -p 8000 --no-cache"
     },
     "repository": {
         "type": "git",
@@ -21,6 +27,8 @@
     },
     "homepage": "https://github.com/udacity/mws-restaurant-stage-1#readme",
     "devDependencies": {
-        "live-server": "^1.2.0"
+        "live-server": "^1.2.0",
+        "parcel-bundler": "^1.9.7",
+        "parcel-plugin-clean-dist": "0.0.6"
     }
 }

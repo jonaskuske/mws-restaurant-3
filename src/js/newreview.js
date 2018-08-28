@@ -1,3 +1,5 @@
+import { DBHelper } from './utils/dbhelper';
+
 (() => {
   const form = document.getElementById('form');
   const nameInput = document.getElementById('name');

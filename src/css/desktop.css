@@ -1,4 +1,4 @@
-@media screen and (max-width: 375px) {
+ @media screen and (max-width: 375px) {
     header nav h1 a {
         font-size: 0.7rem;
     }
@@ -6,6 +6,7 @@
         font-size: 6pt;
     }
 }
+
 
 @media screen and (min-width: 600px) {
     #restaurants-list {
@@ -38,7 +39,7 @@
 
 @media screen and (min-width: 1200px) {
     body {
-        background: url(/img/bg.jpg) center / cover no-repeat;
+        background: url(../img/bg.jpg) center / cover no-repeat;
     }
     main {
         display: flex;

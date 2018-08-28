@@ -1,4 +1,5 @@
 /* IndexedDB helpers */
+import idb from './idb';
 
 /**
  * Promise resolving to the IndexedDB database
@@ -78,7 +79,7 @@ const fetchJson = (...args) => {
 /**
  * Common database helper functions.
  */
-class DBHelper {
+export class DBHelper {
 
     /**
      * Database URL.
@@ -334,7 +335,6 @@ class DBHelper {
         const returnSizeObject = ([key, val]) => ({ name: key === 'xl' ? '' : key, width: val });
         return Object.entries(imageSizesObject).map(returnSizeObject);
     }
-
     /**
      * Map marker for a restaurant.
      */

@@ -6,11 +6,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>NYC Restaurant Reviews</title>
         <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
-        <link rel="stylesheet" href="css/main.css">
-        <link rel="stylesheet" href="css/desktop.css">
-        <link rel="manifest" href="/manifest.json">
-        <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
-        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="./src/css/main.css">
+        <link rel="stylesheet" href="./src/css/desktop.css">
+        <link rel="manifest" href="./src/manifest.webmanifest">
+        <link rel="shortcut icon" type="image/x-icon" href="./src/favicon.ico">
+        <link rel="icon" href="./src/favicon.ico" type="image/x-icon">
         <meta name="theme-color" content="#282828">
     </head>
 
@@ -28,10 +28,10 @@
             <section id="restaurant-container">
                 <div class="filter-options">
                     <h2>Filter Results</h2>
-                    <select id="neighborhoods-select" aria-label="Filter by Neighborhood" name="neighborhoods" onchange="updateRestaurants()">
+                    <select id="neighborhoods-select" aria-label="Filter by Neighborhood" name="neighborhoods">
                         <option value="all">All Neighborhoods</option>
                     </select>
-                    <select id="cuisines-select" aria-label="Filter by Cuisine" name="cuisines" onchange="updateRestaurants()">
+                    <select id="cuisines-select" aria-label="Filter by Cuisine" name="cuisines">
                         <option value="all">All Cuisines</option>
                     </select>
                 </div>
@@ -47,15 +47,14 @@
         </footer>
         <script>
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/service-worker.js')
+                navigator.serviceWorker.register('./src/service-worker.js')
                     .then(reg => console.log('sw registered'))
                     .catch(err => console.warn(`sw failed to register: ${err}`));
             }
         </script>
-        <script type="application/javascript" charset="utf-8" src="js/idb.js"></script>
-        <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
-        <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
+        <script type="application/javascript" charset="utf-8" src="./src/js/main.js"></script>
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDjyhk6b_ChJzBMlJV9nLEm-js94-W5Hv4&libraries=places&callback=initMap"></script>
+        <a href="./restaurant.html" hidden></a>
 
     </body>
 

@@ -244,8 +244,8 @@
           "Sunday": "10:00 am - 3:00 pm, 5:30 pm - 11:00 pm"
         },
         "createdAt": 1504095567091,
-        "updatedAt": 1504095567091,
-        "is_favorite": false,
+        "updatedAt": "2018-08-28T13:22:27.876Z",
+        "is_favorite": "false",
         "id": 8,
         "photograph_sizes": {
           "xs": 200,

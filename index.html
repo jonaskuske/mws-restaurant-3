@@ -45,13 +45,7 @@
                 <strong>Restaurant Reviews</strong>
             </a> All Rights Reserved.
         </footer>
-        <script>
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('./src/service-worker.js')
-                    .then(reg => console.log('sw registered'))
-                    .catch(err => console.warn(`sw failed to register: ${err}`));
-            }
-        </script>
+
         <script type="application/javascript" charset="utf-8" src="./src/js/main.js"></script>
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDjyhk6b_ChJzBMlJV9nLEm-js94-W5Hv4&libraries=places&callback=initMap"></script>
         <a href="./restaurant.html" hidden></a>

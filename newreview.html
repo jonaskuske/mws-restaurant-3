@@ -67,14 +67,6 @@
     </footer>
     <!-- End footer -->
 
-    <!-- Beginning scripts -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./src/service-worker.js')
-          .then(reg => console.log('sw registered'))
-          .catch(err => console.warn(`sw failed to register: ${err}`));
-      }
-    </script>
     <!-- Main javascript file -->
     <script type="text/javascript" src="./src/js/newreview.js"></script>
     <!-- End scripts -->

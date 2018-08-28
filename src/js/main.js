@@ -1,3 +1,4 @@
+import './utils/registerServiceworker';
 import { DBHelper } from './utils/dbhelper';
 
 let restaurants,

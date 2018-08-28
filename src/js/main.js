@@ -231,3 +231,12 @@ const addMarkersToMap = (restaurants = self.restaurants) => {
 }
 
 updateRestaurants();
+
+const showMapBtn = document.getElementById('btn-show-map');
+showMapBtn.addEventListener('click', () => {
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDjyhk6b_ChJzBMlJV9nLEm-js94-W5Hv4&libraries=places&callback=initMap`;
+    document.head.appendChild(script);
+
+    showMapBtn.parentNode.removeChild(showMapBtn);
+});

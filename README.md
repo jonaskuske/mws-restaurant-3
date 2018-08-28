@@ -14,7 +14,12 @@ The commits starting from [*#473a4b9*](https://github.com/jonaskuske/mws-restaur
 `npm run install:backend` to install backend dependencies  
 
 `npm start` to start both backend and frontend  
+`npm run build` to compile a minified production-grade version  
 
 `npm run serve:backend` to start backend on localhost:1337  
 `npm run serve:frontend` to serve frontend on localhost:8000 and open in Chrome  
 
+### About evaluating the performance in Lighthouse
+To test the performance, please use the production-grade version of this app, not the one generated for the live server!
+The production version can be built using `npm run build` and is then found in the folder 'dist'.  
+Also, please remember to run Lighthouse in an Incognito-Tab, so browser extensions etc. can't skew the results.

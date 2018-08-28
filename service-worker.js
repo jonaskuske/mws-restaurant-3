@@ -1,22 +1,10 @@
-importScripts('/js/idb.js');
+import idb from './src/js/utils/idb';
 
-const cachename = 'restaurant-reviews-v1';
+const CACHE_NAME = 'restaurant-reviews-v2';
 const BACKEND_HOST = 'localhost:1337';
 
-const assets = [
+const staticAssets = [
     '.',
-    '/',
-    '/index.html',
-    '/restaurant.html',
-    '/newreview.html',
-    './css/main.css',
-    './css/desktop.css',
-    './css/newreview.css',
-    './js/main.js',
-    './js/idb.js',
-    './js/dbhelper.js',
-    './js/restaurant_info.js',
-    './js/newreview.js',
     './img/1.jpg',
     './img/2.jpg',
     './img/3.jpg',
@@ -30,7 +18,7 @@ const assets = [
     './img/bg.jpg',
 ];
 
-/* Helper functions to dtermine whether requests/responses should be cached */
+/* Helper functions to determine whether requests/responses should be cached */
 const isRequestCacheable = request => {
     const url = new URL(request.url);
     // don't cache responses from backend as it has its own caching using idb
@@ -46,13 +34,42 @@ const isResponseCacheable = response => {
     return true
 }
 
-self.addEventListener('install', (e) => {
-    e.waitUntil(
-        caches.open(cachename).then((cache) => {
-            return cache.addAll(assets);
-        })
+self.addEventListener('install', event => {
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then(cache =>
+                fetch('/parcel-manifest.json')
+                    .then(response => response.json())
+                    .then(assets => {
+                        const hashedAssets = Object.entries(assets)
+                            .filter(([sourceURL]) => (
+                                !sourceURL.includes('webmanifest') &&
+                                !sourceURL.includes('favicon') &&
+                                !sourceURL.endsWith('.map') &&
+                                !sourceURL.includes('src/icons/')))
+                            .map(([_, hashedURL]) => hashedURL);
+
+                        return cache.addAll([...staticAssets, ...hashedAssets]);
+                    })
+            ).then(() => self.skipWaiting())
     );
 });
+
+self.addEventListener('activate', event => {
+    const allowedCaches = [CACHE_NAME];
+    event.waitUntil(
+        caches.keys()
+            .then(cacheNames => {
+                const cacheDeletePromises = cacheNames
+                    .map(cacheName => {
+                        if (!allowedCaches.includes(cacheName)) {
+                            return caches.delete(cacheName)
+                        }
+                    });
+                return Promise.all(cacheDeletePromises);
+            })
+    )
+})
 
 self.addEventListener('fetch', (e) => {
     // if request should not be cached: respond with fetch and return
@@ -77,7 +94,7 @@ self.addEventListener('fetch', (e) => {
                     fetch(request).then((netresponse) => {
                         if (isResponseCacheable(netresponse)) {
                             caches
-                                .open(cachename)
+                                .open(CACHE_NAME)
                                 .then((cache) => cache.put(request, netresponse))
                         }
                     }).catch((e) => {
@@ -96,7 +113,7 @@ self.addEventListener('fetch', (e) => {
 
                     if (isResponseCacheable(cacheResponse)) {
                         caches
-                            .open(cachename)
+                            .open(CACHE_NAME)
                             .then((cache) => cache.put(request, cacheResponse));
                     }
 
@@ -123,7 +140,7 @@ const putInReviewStore = (body, key) => dbPromise.then(async db => {
     await tx.complete;
     return;
 })
-checkFetchStatus = r => new Promise((res, rej) => {
+const checkFetchStatus = r => new Promise((res, rej) => {
     if (r.status >= 200 && r.status < 300) res(r);
     else rej(r);
 })

@@ -1,8 +1,21 @@
 import './utils/registerServiceworker';
 import { DBHelper } from './utils/dbhelper';
+import { clearOutbox } from './utils/outboxSync';
 
 let restaurantGlobal;
 var map;
+
+const checkReviews = () => clearOutbox()
+    .then(contentUpdated => {
+        if (!contentUpdated) return;
+
+        // notify user to reload page -> new reviews
+        document.getElementById('new-content').classList.remove('hide');
+    })
+
+/* Check for new reviews */
+if (navigator.onLine) checkReviews()
+window.addEventListener('online', checkReviews);
 
 /**
  * Initialize Google map, called from HTML.

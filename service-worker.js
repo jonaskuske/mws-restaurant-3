@@ -18,22 +18,6 @@ const staticAssets = [
     './img/bg.jpg',
 ];
 
-/* Helper functions to determine whether requests/responses should be cached */
-const isRequestCacheable = request => {
-    const url = new URL(request.url);
-    // don't cache responses from backend as it has its own caching using idb
-    if (url.host === BACKEND_HOST) return false;
-
-    return true;
-}
-const isResponseCacheable = response => {
-    // don't cache opaque response to prevent exceeding cache size quota
-    // see https://cloudfour.com/thinks/when-7-kb-equals-7-mb/
-    if (response.status === 0 || response.type === 'opaque') return false;
-
-    return true
-}
-
 /* get the filenames to cache from the parcel-manifest and add them to cache
 see https://michalzalecki.com/progressive-web-apps-with-webpack/ */
 self.addEventListener('install', event => {
@@ -75,57 +59,72 @@ self.addEventListener('activate', event => {
     )
 })
 
-self.addEventListener('fetch', (e) => {
+const checkResponseStatus = r => new Promise((res, rej) => {
+    if ((r.status >= 200 && r.status < 300) || r.status === 0) res(r);
+    else rej(r.statusText);
+})
+/* Helper functions to determine whether requests/responses should be cached */
+const isRequestCacheable = request => {
+    const url = new URL(request.url);
+    // don't cache responses from backend as it has its own caching using idb
+    if (url.host === BACKEND_HOST) return false;
+    if (url.protocol === 'chrome-extension:') return false;
+
+    return true;
+}
+const isResponseCacheable = response => {
+    // don't cache opaque response to prevent exceeding cache size quota
+    // see https://cloudfour.com/thinks/when-7-kb-equals-7-mb/
+    if (response.status === 0 || response.type === 'opaque') return false;
+
+    return true
+}
+
+const requestFailingWith404 = event => {
+    return fetch(event.request)
+        .catch(() => {
+            const body = JSON.stringify({ error: 'Sorry, you\'re offline. Try again once you have a working internet connection.' });
+            const headers = { 'Content-Type': 'application/json' };
+            return new Response(body, { status: 404, statusText: 'Not Found', headers });
+        });
+}
+const requestThenCache = (event, cache) => {
+    return fetch(event.request)
+        .then(checkResponseStatus)
+        .then(response => {
+            if (isResponseCacheable(response)) {
+                cache.put(event.request, response.clone());
+            }
+            return response;
+        })
+        .catch(() => cache.match(event.request))
+}
+
+self.addEventListener('fetch', event => {
     // if request should not be cached: respond with fetch and return
-    if (!isRequestCacheable(e.request)) {
-        e.respondWith(fetch(e.request));
+    if (!isRequestCacheable(event.request)) {
+        event.respondWith(requestFailingWith404(event));
         return;
     }
 
     // neccessary for sw to handle requests with query strings
     // like /restaurant.html?id=1
-    let request;
-    if (e.request.url.includes('/restaurant.html')) request = new Request('/restaurant.html');
-    else if (e.request.url.includes('/newreview.html')) request = new Request('/newreview.html');
-    else request = e.request;
+    const requestURL = event.request.url;
+    const request = requestURL.includes('?')
+        ? new Request(requestURL.substring(requestURL.indexOf('?') + 1))
+        : event.request;
 
-    e.respondWith(
-        caches.match(request).then((response) => {
-            if (response) {
-
-                // if online: fetch ressource and update cache asynchronously
-                if (navigator.onLine) {
-                    fetch(request).then((netresponse) => {
-                        if (isResponseCacheable(netresponse)) {
-                            caches
-                                .open(CACHE_NAME)
-                                .then((cache) => cache.put(request, netresponse))
-                        }
-                    }).catch((e) => {
-                        /* catch DevTools related only-if-cached error */
+    event.respondWith(
+        caches.match(request)
+            .then(checkResponseStatus)
+            .then(response => {
+                return caches.open(CACHE_NAME)
+                    .then(cache => {
+                        if (navigator.onLine) requestThenCache(event, cache);
+                        return response;
                     });
-                }
-
-                // immediately return cached response: offline-first 🤘
-                return response;
-
-            } else {
-
-                // fetch previously uncached ressource, cache cloned response, return real response
-                return fetch(request).then((response) => {
-                    const cacheResponse = response.clone();
-
-                    if (isResponseCacheable(cacheResponse)) {
-                        caches
-                            .open(CACHE_NAME)
-                            .then((cache) => cache.put(request, cacheResponse));
-                    }
-
-                    return response;
-                });
-
-            }
-        })
+            }).catch(() => caches.open(CACHE_NAME)
+                .then(cache => requestThenCache(event, cache)))
     )
 });
 
@@ -144,16 +143,12 @@ const putInReviewStore = (body, key) => dbPromise.then(async db => {
     await tx.complete;
     return;
 })
-const checkFetchStatus = r => new Promise((res, rej) => {
-    if (r.status >= 200 && r.status < 300) res(r);
-    else rej(r);
-})
 /* update the cached reviews for a given restaurant */
 const updateReviewCache = async id => {
     const reviews = await fetch(
         `http://localhost:1337/reviews?restaurant_id=${id}`
     )
-        .then(checkFetchStatus)
+        .then(checkResponseStatus)
         .then(r => r.json());
 
     await putInReviewStore(reviews, id);
@@ -164,7 +159,7 @@ const sendReview = data => {
         method: 'POST',
         body: JSON.stringify(data),
         headers: { 'Content-Type': 'application/json' }
-    }).then(checkFetchStatus);
+    }).then(checkResponseStatus);
 }
 
 /* Sends all reviews stored in the outbox to the server */
@@ -195,10 +190,10 @@ const clearOutbox = () => new Promise(async (resolve, reject) => {
 })
 
 /* register the handler for syncing the outbox */
-self.addEventListener('sync', evt => {
-    console.log('syncing outbox...');
+self.addEventListener('sync', event => {
+    console.log('Syncing outbox...');
 
-    if (evt.tag === 'sync-outbox') {
-        return evt.waitUntil(clearOutbox());
+    if (event.tag === 'sync-outbox') {
+        return event.waitUntil(clearOutbox());
     }
 })
